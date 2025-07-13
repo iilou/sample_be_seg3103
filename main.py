@@ -106,8 +106,8 @@ def gcd_euler_extended(a: int, b: int):
 # cats
 
 
-cats_db = Dict[str, dict] = {}
-clubs_db = Dict[str, str] = {}
+cats_db =dict[str, dict]()
+clubs_db = dict[str, str]()
 
 
 class Cat(BaseModel):
