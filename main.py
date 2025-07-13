@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import math
+from typing import Dict
 
 app = FastAPI()
 app.add_middleware(
@@ -97,162 +98,60 @@ def gcd_euler_extended(a: int, b: int):
     return {"gcd": abs(gcd)}
 
 
-class CatNode(BaseModel):
-    category: str
-    children: list[str] = []
 
-@app.get("/cats/cats")
-def get_cats():
-    return CatNode(
-        category="all",
-        children=[
-            "domestic",
-            "wild",
-        ]
-    )
 
-@app.get("/cats/domestic")
-def get_domestic_cats():
-    return CatNode(
-        category="domestic",
-        children=[
-            "shorthair",
-            "longhair",
-        ]
-    )
 
-@app.get("/cats/wild")
-def get_wild_cats():
-    return CatNode(
-        category="wild",
-        children=[
-            "lion",
-            "tiger",
-            "leopard",
-        ]
-    )
-@app.get("/cats/domestic/domestic_shorthair")
-def get_domestic_shorthair_cats():
-    return CatNode(
-        category="domestic shorthair",
-        children=[
-            "american shorthair",
-            "british shorthair",
-            "manx",
-        ]
-    )
-@app.get("/cats/domestic/domestic_longhair")
-def get_domestic_longhair_cats():
-    return CatNode(
-        category="domestic longhair",
-        children=[
-            "persian",
-            "maine coon",
-        ]
-    )
 
-@app.get("/cats/wild/lion")
-def get_wild_lion_cats():
-    return CatNode(
-        category="lion",
-        children=[
-            "masai lion",
-        ]
-    )
 
-@app.get("/cats/wild/tiger")
-def get_wild_tiger_cats():
-    return CatNode(
-        category="tiger",
-        children=[
-            "sumatran tiger",
-            "malayan tiger",
-            "south china tiger",
-        ]
-    )
+# cats
 
-@app.get("/cats/wild/leopard")
-def get_wild_leopard_cats():
-    return CatNode(
-        category="leopard",
-        children=[
-            "amur leopard",
-            "sri lankan leopard",
-        ]
-    )
 
-@app.get("/cats/domestic/shorthair/american_shorthair")
-def get_domestic_american_shorthair_cats():
-    return CatNode(
-        category="american shorthair",
-        children=[]
-    )
+cats_db = Dict[str, dict] = {}
+clubs_db = Dict[str, str] = {}
 
-@app.get("/cats/domestic/shorthair/british_shorthair")
-def get_domestic_british_shorthair_cats():
-    return CatNode(
-        category="british shorthair",
-        children=[]
-    )
 
-@app.get("/cats/domestic/shorthair/manx")
-def get_domestic_manx_cats():
-    return CatNode(
-        category="manx",
-        children=[]
-    )
+class Cat(BaseModel):
+    name: str
+    age: int
+    type: str
 
-@app.get("/cats/domestic/longhair/persian")
-def get_domestic_persian_cats():
-    return CatNode(
-        category="persian",
-        children=[]
-    )
-@app.get("/cats/domestic/longhair/maine_coon")
-def get_domestic_maine_coon_cats():
-    return CatNode(
-        category="maine coon",
-        children=[]
-    )
+class Login(BaseModel):
+    name: str
 
-@app.get("/cats/wild/lion/masai_lion")
-def get_wild_masai_lion_cats():
-    return CatNode(
-        category="masai lion",
-        children=[]
-    )
+class JoinClub(BaseModel):
+    name: str
+    club: str
 
-@app.get("/cats/tiger/sumatran_tiger")
-def get_wild_sumatran_tiger():
-    return CatNode(
-        category="sumatran_tiger",
-        children=[]
-    )
+def verify_cat(token: str):
+    if token != "meow":
+        raise HTTPException(status_code=401, detail="Unauthorized: Invalid token")
+    
+@app.post("/cats/register")
+def register_cat(cat: Cat):
+    if cat.name in cats_db:
+        raise HTTPException(status_code=400, detail="cat already registered, please login.")
+    cats_db[cat.name] = cat.dict()
+    return {"message": "cat successfully registered", "cat_": cats_db[cat.name]}
 
-@app.get("/cats/wild/tiger/malayan_tiger")
-def get_wild_malayan_tiger():
-    return CatNode(
-        category="malayan tiger",
-        children=[]
-    )
+@app.post("/cats/login")
+def login_cat(login: Login):
+    verify_cat(login.name)
+    if login.name not in cats_db:
+        raise HTTPException(status_code=404, detail="cat not found, please register first.")
+    return {"message": "cat successfully logged in", "cat_": cats_db[login.name], "token": "meow"}
 
-@app.get("/cats/wild/tiger/south_china_tiger")
-def get_wild_south_china_tiger():
-    return CatNode(
-        category="south china tiger",
-        children=[]
-    )
+@app.post("/cats/join")
+def join_club(join: JoinClub, token: str):
+    verify_cat(token)
+    if join.name not in cats_db:
+        raise HTTPException(status_code=404, detail="cat not found, please register first.")
 
-@app.get("/cats/wild/leopard/amur_leopard")
-def get_wild_amur_leopard():
-    return CatNode(
-        category="amur leopard",
-        children=[]
-    )
 
-@app.get("/cats/wild/leopard/sri_lankan_leopard")
-def get_wild_sri_lankan_leopard():
-    return CatNode(
-        category="sri lankan leopard",
-        children=[]
-    )
+    clubs_db[join.name] = join.club
+    return {"message": f"cat {join.name} has joined club {join.club}"}
+
+@app.get("/cats/club/{name}")
+def get_club(name: str):
+    if name not in clubs_db:
+        raise HTTPException(status_code=404, detail="cat not found or has not joined any club.")
+    return {"cat": name, "club": clubs_db[name]}
