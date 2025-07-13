@@ -135,7 +135,6 @@ def register_cat(cat: Cat):
 
 @app.post("/cats/login")
 def login_cat(login: LoginRequest):
-    verify_cat(login.name)
     if login.name not in cats_db:
         raise HTTPException(status_code=404, detail="cat not found, please register first.")
     return {"message": "cat successfully logged in", "cat_": cats_db[login.name], "token": "meow"}
