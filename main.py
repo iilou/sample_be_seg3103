@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import math
@@ -122,7 +122,7 @@ class ClubJoinRequest(BaseModel):
     name: str
     club: str
 
-def verify_cat(token: str):
+def verify_cat(token: str=Header(...)):
     if token != "meow":
         raise HTTPException(status_code=401, detail="Unauthorized: Invalid token")
     
@@ -140,7 +140,7 @@ def login_cat(login: LoginRequest):
     return {"message": "cat successfully logged in", "cat_": cats_db[login.name], "token": "meow"}
 
 @app.post("/cats/join")
-def join_club(join: ClubJoinRequest, token: str):
+def join_club(join: ClubJoinRequest, token: str=Header(...)):
     verify_cat(token)
     if join.name not in cats_db:
         raise HTTPException(status_code=404, detail="cat not found, please register first.")
