@@ -131,7 +131,7 @@ def get_wild_cats():
             "leopard",
         ]
     )
-@app.get("/cats/domestic/shorthair")
+@app.get("/cats/domestic/domestic_shorthair")
 def get_domestic_shorthair_cats():
     return CatNode(
         category="domestic shorthair",
@@ -141,7 +141,7 @@ def get_domestic_shorthair_cats():
             "manx",
         ]
     )
-@app.get("/cats/domestic/longhair")
+@app.get("/cats/domestic/domestic_longhair")
 def get_domestic_longhair_cats():
     return CatNode(
         category="domestic longhair",
@@ -179,4 +179,80 @@ def get_wild_leopard_cats():
             "amur leopard",
             "sri lankan leopard",
         ]
+    )
+
+@app.get("/cats/domestic/shorthair/american_shorthair")
+def get_domestic_american_shorthair_cats():
+    return CatNode(
+        category="american shorthair",
+        children=[]
+    )
+
+@app.get("/cats/domestic/shorthair/british_shorthair")
+def get_domestic_british_shorthair_cats():
+    return CatNode(
+        category="british shorthair",
+        children=[]
+    )
+
+@app.get("/cats/domestic/shorthair/manx")
+def get_domestic_manx_cats():
+    return CatNode(
+        category="manx",
+        children=[]
+    )
+
+@app.get("/cats/domestic/longhair/persian")
+def get_domestic_persian_cats():
+    return CatNode(
+        category="persian",
+        children=[]
+    )
+@app.get("/cats/domestic/longhair/maine_coon")
+def get_domestic_maine_coon_cats():
+    return CatNode(
+        category="maine coon",
+        children=[]
+    )
+
+@app.get("/cats/wild/lion/masai_lion")
+def get_wild_masai_lion_cats():
+    return CatNode(
+        category="masai lion",
+        children=[]
+    )
+
+@app.get("/cats/tiger/sumatran_tiger")
+def get_wild_sumatran_tiger():
+    return CatNode(
+        category="sumatran_tiger",
+        children=[]
+    )
+
+@app.get("/cats/wild/tiger/malayan_tiger")
+def get_wild_malayan_tiger():
+    return CatNode(
+        category="malayan tiger",
+        children=[]
+    )
+
+@app.get("/cats/wild/tiger/south_china_tiger")
+def get_wild_south_china_tiger():
+    return CatNode(
+        category="south china tiger",
+        children=[]
+    )
+
+@app.get("/cats/wild/leopard/amur_leopard")
+def get_wild_amur_leopard():
+    return CatNode(
+        category="amur leopard",
+        children=[]
+    )
+
+@app.get("/cats/wild/leopard/sri_lankan_leopard")
+def get_wild_sri_lankan_leopard():
+    return CatNode(
+        category="sri lankan leopard",
+        children=[]
     )
