@@ -115,10 +115,10 @@ class Cat(BaseModel):
     age: int
     type: str
 
-class Login(BaseModel):
+class LoginRequest(BaseModel):
     name: str
 
-class JoinClub(BaseModel):
+class ClubJoinRequest(BaseModel):
     name: str
     club: str
 
@@ -134,14 +134,14 @@ def register_cat(cat: Cat):
     return {"message": "cat successfully registered", "cat_": cats_db[cat.name]}
 
 @app.post("/cats/login")
-def login_cat(login: Login):
+def login_cat(login: LoginRequest):
     verify_cat(login.name)
     if login.name not in cats_db:
         raise HTTPException(status_code=404, detail="cat not found, please register first.")
     return {"message": "cat successfully logged in", "cat_": cats_db[login.name], "token": "meow"}
 
 @app.post("/cats/join")
-def join_club(join: JoinClub, token: str):
+def join_club(join: ClubJoinRequest, token: str):
     verify_cat(token)
     if join.name not in cats_db:
         raise HTTPException(status_code=404, detail="cat not found, please register first.")
