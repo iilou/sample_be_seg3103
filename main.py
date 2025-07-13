@@ -95,3 +95,88 @@ def gcd_euler_extended(a: int, b: int):
     gcd = gcd_extendedEuclid(a, b, x, y)
     
     return {"gcd": abs(gcd)}
+
+
+class CatNode(BaseModel):
+    category: str
+    children: list[str] = []
+
+@app.get("/cats/cats")
+def get_cats():
+    return CatNode(
+        category="all",
+        children=[
+            "domestic",
+            "wild",
+        ]
+    )
+
+@app.get("/cats/domestic")
+def get_domestic_cats():
+    return CatNode(
+        category="domestic",
+        children=[
+            "shorthair",
+            "longhair",
+        ]
+    )
+
+@app.get("/cats/wild")
+def get_wild_cats():
+    return CatNode(
+        category="wild",
+        children=[
+            "lion",
+            "tiger",
+            "leopard",
+        ]
+    )
+@app.get("/cats/domestic/shorthair")
+def get_domestic_shorthair_cats():
+    return CatNode(
+        category="domestic shorthair",
+        children=[
+            "american shorthair",
+            "british shorthair",
+            "manx",
+        ]
+    )
+@app.get("/cats/domestic/longhair")
+def get_domestic_longhair_cats():
+    return CatNode(
+        category="domestic longhair",
+        children=[
+            "persian",
+            "maine coon",
+        ]
+    )
+
+@app.get("/cats/wild/lion")
+def get_wild_lion_cats():
+    return CatNode(
+        category="lion",
+        children=[
+            "masai lion",
+        ]
+    )
+
+@app.get("/cats/wild/tiger")
+def get_wild_tiger_cats():
+    return CatNode(
+        category="tiger",
+        children=[
+            "sumatran tiger",
+            "malayan tiger",
+            "south china tiger",
+        ]
+    )
+
+@app.get("/cats/wild/leopard")
+def get_wild_leopard_cats():
+    return CatNode(
+        category="leopard",
+        children=[
+            "amur leopard",
+            "sri lankan leopard",
+        ]
+    )
